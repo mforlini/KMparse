@@ -10,7 +10,10 @@ class MetadataArgs(parser: ArgParser) {
         "-a", "--all",
         help = "force parsing of all files even when input contains a smali directory"
     )
-
+    val force by parser.flagging(
+        "-f", "--force",
+        help = "delete destination directory"
+    )
     val source by parser.positional(
         "SOURCE",
         help = "source filename"
@@ -36,29 +39,35 @@ class MetadataArgs(parser: ArgParser) {
             throw SystemExitException("Destination is an invalid path", 1)
         }
     }.default(Paths.get("").toAbsolutePath())
+        .addValidator {
+            if (Files.exists(value) && !force) {
+                throw InvalidArgumentException("Destination directory already exists. Use --force (or -f) to force overwrite")
+            }
+        }
 }
 
 fun main(args: Array<String>) {
     mainBody(PROGRAM_NAME) {
-        ArgParser(args= args,helpFormatter = DefaultHelpFormatter(PROGRAM_DESCRIPTION)).parseInto(::MetadataArgs).run {
-            val metadataInfoDirectory = destination.resolve(DIRECTORY_NAME)
-            val metadataTree =
-                if (!allFiles && Files.exists(source.resolve(SMALI))) createMetadataTreeFromSmaliDirectories(source) else createMetadataTreeFromPath(
-                    source
-                )
-            if (metadataTree == null) {
-                println("No Kotlin annotated smali files found")
-            } else {
-                try {
-                    metadataInfoDirectory.toFile().deleteRecursively()
-                    Files.createDirectories(metadataInfoDirectory)
-                    metadataTreeToFile(metadataTree, metadataInfoDirectory)
-                    println("Finished")
-                } catch (e: Exception) {
-                    throw SystemExitException("Destination is not valid", 1)
+        ArgParser(args = args, helpFormatter = DefaultHelpFormatter(PROGRAM_DESCRIPTION)).parseInto(::MetadataArgs)
+            .run {
+                val metadataInfoDirectory = destination.resolve(DIRECTORY_NAME)
+                val metadataTree =
+                    if (!allFiles && Files.exists(source.resolve(SMALI))) createMetadataTreeFromSmaliDirectories(source) else createMetadataTreeFromPath(
+                        source
+                    )
+                if (metadataTree == null) {
+                    println("No Kotlin annotated smali files found")
+                } else {
+                    try {
+                        if (force) metadataInfoDirectory.toFile().deleteRecursively()
+                        Files.createDirectories(metadataInfoDirectory)
+                        metadataTreeToFile(metadataTree, metadataInfoDirectory)
+                        println("Finished")
+                    } catch (e: Exception) {
+                        throw SystemExitException("Destination is not valid", 1)
+                    }
                 }
             }
-        }
     }
 
 }
