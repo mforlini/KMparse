@@ -28,3 +28,11 @@ application{
     mainClassName ="io.github.mforlini.kmparse.MetadataCLIKt"
     applicationName = "kmparse"
 }
+distributions {
+    main{
+        contents{
+            from 'README.md'
+            from 'LICENSE.md'
+        }
+    }
+}
