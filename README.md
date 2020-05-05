@@ -2,11 +2,11 @@
 
 ## Introduction
 
-The purpose of KMparse is to deobsfucate Android applications written in Kotlin by way of Kotlin metadata annotations.
+The purpose of KMparse is to deobfuscate Android applications written in Kotlin by way of Kotlin metadata annotations.
 
 #### What is Kotlin metadata
 
-Kotlin metadata is added to all code produced by the Kotlin compiler and its purpose is to retain information on Kotlin langague features after the code has been complied into Java.
+Kotlin metadata is added to all code produced by the Kotlin compiler and its purpose is to retain information on Kotlin language features after the code has been complied into Java.
 It is added in the form of an annotation in the complied code and contains all the knowledge that the Kotlin compiler had about the class.
 This knowledge includes class names, function signatures and properties.
 
