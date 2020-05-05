@@ -14,10 +14,50 @@ This knowledge includes class names, function signatures and properties.
 
 Most of the data of a Kotlin metadata annotation is stored in the form of a protocol buffer alongside plain text strings.
 KMparse will scan smali files for Kotlin metadata and parse these protocol buffers and strings into a human readable form.
-This information can then be used to refactor class names, function names, and properties that have been stripped out by R8 or ProGuard.
+This information can then be used to refactor class names, function names, and properties that have been stripped out by R8 or ProGuard. While the metadata will not be obfuscated by R8/ProGuard, whether it is removed depends on the particulars of the app.
 
 ## Example
+An example of a simple obfuscated class from an Android app and KMparse output from the class's smali file.
+#### Example class decompiled with jadx
+```java
+public final class a extends b {
+    private final String c;
 
+    public a(Context context, String str, String str2) {
+      //...
+    }
+
+    public static int a(int i, int i2) {
+      //...
+    }
+
+    public final void a() {
+      //...
+    }
+}
+```
+#### KMparse output on a.smali
+```
+Type: Class
+Class Info:
+    Name: io/github/mforlini/KMparseExample/HelloWorld
+    Supertypes: Class(name=io/github/mforlini/KMparseExample/OurMessenger)
+    Module Name: app_release
+    Type Aliases: 
+    Companion Object: 
+    Nested Classes:  
+    Enum Entries: 
+
+Constructors:
+    <init>(Landroid/content/Context;Ljava/lang/String;Ljava/lang/String;)V, Arguments: context, greeting, message
+
+Functions:
+    computeSecret(II)I, Arguments: lowerBound, upperBound
+    showMessage()V, Arguments: 
+
+Properties:
+    greeting:Ljava/lang/String;
+```
 ## Installation
 
 ## Usage
