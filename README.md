@@ -61,3 +61,27 @@ Properties:
 ## Installation
 
 ## Usage
+```
+usage: kmparse [-h] [-a] [-f] SOURCE [DEST]
+
+
+Parses Kotlin metadata annotations from smali files into human readable class
+information
+
+
+optional arguments:
+  -h,       show this help message and exit
+  --help
+
+  -a,       force parsing of all files even when input contains a smali
+  --all     directory
+
+  -f,       delete destination directory
+  --force
+
+
+positional arguments:
+  SOURCE    source filename
+
+  DEST      destination directory
+  ```
