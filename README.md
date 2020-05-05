@@ -18,7 +18,7 @@ This information can then be used to refactor class names, function names, and p
 
 ## Example
 An example of a simple obfuscated class from an Android app and KMparse output from the class's smali file.
-#### Example class decompiled with jadx
+#### Example class decompiled with [jadx](https://github.com/skylot/jadx)
 ```java
 public final class a extends b {
     private final String c;
