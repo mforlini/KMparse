@@ -59,6 +59,7 @@ Properties:
     greeting:Ljava/lang/String;
 ```
 ## Installation
+Download from . Unpack the archive and run the scripts from the `bin` directory; `kmparse` for \*nix and `kmparse.bat` for Windows.
 
 ## Usage
 ```
