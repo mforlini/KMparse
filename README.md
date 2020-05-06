@@ -59,7 +59,7 @@ Properties:
     greeting:Ljava/lang/String;
 ```
 ## Installation
-Download from . Unpack the archive and run the scripts from the `bin` directory; `kmparse` for \*nix and `kmparse.bat` for Windows.
+Download from . Unpack the archive and run the scripts from the `bin` directory; `kmparse` for \*nix and `kmparse.bat` for Windows. Java 8 or higher required.
 
 ## Usage
 ```
