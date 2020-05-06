@@ -5,12 +5,12 @@ import org.apache.commons.text.StringEscapeUtils
 import java.nio.charset.Charset
 import java.nio.file.Files
 import java.nio.file.Path
-
-inline fun <T> Path.useLines(charset: Charset = Charsets.UTF_8, block: (Sequence<String>) -> T): T =
-    Files.newBufferedReader(this, charset).use { block(it.lineSequence()) }
+import kotlin.streams.toList
 
 val Path.extension: String
     get() = fileName.toString().substringAfterLast('.', "")
+
+fun Path.listOfEntries(): List<Path> = Files.list(this).use {it.toList()}
 
 fun <T> List<T>.plusNotNull(element: T?): List<T> = element?.let { this + element } ?: this
 

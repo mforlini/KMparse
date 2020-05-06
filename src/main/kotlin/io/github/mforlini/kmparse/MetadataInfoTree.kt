@@ -3,7 +3,6 @@ package io.github.mforlini.kmparse
 import kotlinx.metadata.jvm.KotlinClassHeader
 import java.nio.file.Files
 import java.nio.file.Path
-import kotlin.streams.toList
 
 sealed class FileTreeNode {
     data class DirectoryNode(
@@ -22,7 +21,7 @@ fun createMetadataTreeFromPath(path: Path): FileTreeNode? =
     if (Files.isDirectory(path)) createDirectoryNodeFromPath(path) else createKotlinClassInfoNodeFromPath(path)
 
 fun createMetadataTreeFromSmaliDirectories(path: Path): FileTreeNode.DirectoryNode? =
-    Files.list(path).toList()
+    path.listOfEntries()
         .filter { it.fileName.toString().startsWith(SMALI) }
         .map { createMetadataTreeFromPath(it) }
         .filterIsInstance<FileTreeNode.DirectoryNode>()
@@ -36,8 +35,7 @@ fun createKotlinClassInfoNode(name: String, kotlinClassHeader: KotlinClassHeader
     FileTreeNode.KotlinClassInfoNode(name, kotlinClassHeader, kotlinClassHeader.toStringBlock())
 
 fun createDirectoryNodeFromPath(root: Path): FileTreeNode.DirectoryNode? {
-    val fileList = Files.list(root).toList()
-    val children = fileList.fold(listOf<FileTreeNode>())
+    val children = root.listOfEntries().fold(listOf<FileTreeNode>())
     { acc, path ->
         if (path.extension == SMALI) acc.plusNotNull(createKotlinClassInfoNodeFromPath(path))
         else if (Files.isDirectory(path)) acc.plusNotNull(createDirectoryNodeFromPath(path))
@@ -79,10 +77,10 @@ fun metadataTreeToFile(node: FileTreeNode, path: Path) {
     }
 }
 
-fun parseSmaliFile(path: Path): KotlinClassHeader? = getKotlinClassHeader(readMetadataAnnotation(path))
+fun parseSmaliFile(path: Path): KotlinClassHeader? = getKotlinClassHeader(readMetadataAnnotation(path).asSequence())
 
-fun readMetadataAnnotation(path: Path): Sequence<String> = path.useLines {
-    return it.subsequenceBetween(ANNOTATION_START, ANNOTATION_END).toList().asSequence()
+fun readMetadataAnnotation(path: Path): List<String> = path.toFile().useLines {
+    return it.subsequenceBetween(ANNOTATION_START, ANNOTATION_END).toList()
 }
 
 fun getKotlinClassHeader(metadataSequence: Sequence<String>): KotlinClassHeader? {
